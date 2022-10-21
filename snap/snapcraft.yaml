@@ -52,12 +52,14 @@ parts:
     stage-packages:
       - openjdk-8-jre-headless
       - unifi
+    override-build: |
+      snapcraftctl build
+      VER=$(cat $SNAPCRAFT_PART_INSTALL/usr/lib/unifi/webapps/ROOT/app-unifi/.version | sed 's/-.*$//')
+      snapcraftctl set-version $VER
     override-prime: |
       snapcraftctl prime
       ln -sf /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/bin/mongod \
         $SNAPCRAFT_PRIME/usr/lib/unifi/bin/mongod
-      VER=$(cat $SNAPCRAFT_PRIME/usr/lib/unifi/webapps/ROOT/app-unifi/.version)
-      snapcraftctl set-version $VER
   scripts:
     plugin: dump
     source: scripts
