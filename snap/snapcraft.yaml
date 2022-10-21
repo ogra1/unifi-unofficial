@@ -60,6 +60,8 @@ parts:
       snapcraftctl prime
       ln -sf /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/bin/mongod \
         $SNAPCRAFT_PRIME/usr/lib/unifi/bin/mongod
+    prime:
+      - -usr/lib/jvm/java-*/jre/lib/security/cacerts
   scripts:
     plugin: dump
     source: scripts
