@@ -1,0 +1,65 @@
+name: unifi-unofficial
+adopt-info: unifi
+summary: Unifi Network controller software.
+description: |
+  Unofficial snap package of the Unifi Network controller software.
+base: core20
+confinement: strict
+grade: stable
+architectures:
+ - build-on: amd64
+
+package-repositories:
+  - type: apt
+    components: [ubiquiti]
+    suites: [unifi-7.2]
+    key-id: 4A228B2D358A5094178285BE06E85760C0A52C50
+    url: https://www.ui.com/downloads/unifi/debian
+
+layout:
+   /usr/lib/unifi/bin:
+     bind: $SNAP/usr/lib/unifi/bin
+   /usr/lib/unifi/conf:
+     bind: $SNAP/usr/lib/unifi/conf
+   /usr/lib/unifi/dl:
+     bind: $SNAP/usr/lib/unifi/dl
+   /usr/lib/unifi/lib:
+     bind: $SNAP/usr/lib/unifi/lib
+   /usr/lib/unifi/webapps:
+     bind: $SNAP/usr/lib/unifi/webapps
+   /usr/lib/unifi/data:
+     bind: $SNAP_DATA/data
+   /usr/lib/unifi/run:
+     bind: $SNAP_DATA/run
+   /usr/lib/unifi/logs:
+     bind: $SNAP_DATA/logs
+   /usr/lib/unifi/work:
+     bind: $SNAP_DATA/work
+
+apps:
+  unifi:
+    command: bin/launcher.sh
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+      - mount-observe
+
+parts:
+  unifi:
+    plugin: dump
+    source: .
+    stage-packages:
+      - openjdk-8-jre-headless
+      - unifi
+    override-prime: |
+      snapcraftctl prime
+      ln -sf /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/bin/mongod \
+        $SNAPCRAFT_PRIME/usr/lib/unifi/bin/mongod
+      VER=$(cat $SNAPCRAFT_PRIME/usr/lib/unifi/webapps/ROOT/app-unifi/.version)
+      snapcraftctl set-version $VER
+  scripts:
+    plugin: dump
+    source: scripts
+    organize:
+      launcher.sh: bin/launcher.sh
