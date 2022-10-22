@@ -41,9 +41,10 @@ apps:
     command: bin/launcher.sh
     daemon: simple
     plugs:
+      - mount-observe
       - network
       - network-bind
-      - mount-observe
+      - network-observe
 
 parts:
   unifi:
