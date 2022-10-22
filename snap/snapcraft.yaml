@@ -63,6 +63,7 @@ parts:
         $SNAPCRAFT_PRIME/usr/lib/unifi/bin/mongod
     prime:
       - -usr/lib/jvm/java-*/jre/lib/security/cacerts
+      - -usr/lib/jvm/java-*/lib/security/cacerts
   scripts:
     plugin: dump
     source: scripts
