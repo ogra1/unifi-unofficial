@@ -50,20 +50,20 @@ parts:
   unifi:
     plugin: dump
     source: .
+    build-packages:
+      - ca-certificates-java
     stage-packages:
       - openjdk-8-jre-headless
       - unifi
     override-build: |
       snapcraftctl build
-      VER=$(cat $SNAPCRAFT_PART_INSTALL/usr/lib/unifi/webapps/ROOT/app-unifi/.version | sed 's/-.*$//')
+      VER="$(cat $SNAPCRAFT_PART_INSTALL/usr/lib/unifi/webapps/ROOT/app-unifi/.version | \
+           sed 's/-.*$//')"
       snapcraftctl set-version $VER
     override-prime: |
       snapcraftctl prime
       ln -sf /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/bin/mongod \
         $SNAPCRAFT_PRIME/usr/lib/unifi/bin/mongod
-    prime:
-      - -usr/lib/jvm/java-*/jre/lib/security/cacerts
-      - -usr/lib/jvm/java-*/lib/security/cacerts
   scripts:
     plugin: dump
     source: scripts
